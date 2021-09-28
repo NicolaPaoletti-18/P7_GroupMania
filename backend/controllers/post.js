@@ -1,0 +1,133 @@
+// MIDDLEWARE GETALLPOSTS pour obtenir tous les messages
+exports.getAllPosts = (req, res, next) => {
+  const userID = res.locals.userID;
+
+  let sqlGetPosts;
+  mysql.query(sqlGetPosts, [userID, userID, userID], function (err, result) {
+    if (err) {
+        return res.status(500).json(err.message);
+    }
+    if (result.length == 0) {
+        return res.status(400).json({ message: "Aucun post à afficher !" });
+    }
+    res.status(200).json(result);
+});
+};
+// FIN MIDDLEWARE
+
+exports.getOnePost = (req, res, next) => {
+  const userID = res.locals.userID;
+  const postID = req.params.id;
+
+  let sqlGetPost;
+  mysql.query(sqlGetPost, [userID, userID, userID, postID, postID], function (err, result) {
+    if (err) {
+        return res.status(500).json(err.message);
+    }
+    if (result.length == 0) {
+        return res.status(400).json({ message: "Aucun post à afficher !" });
+    }
+    res.status(200).json(result);
+});
+};
+// FIN MIDDLEWARE
+
+
+exports.createPost = (req, res, next) => {
+  const userID = res.locals.userID;
+  const legend = req.body.legend;
+  const gifUrl = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
+  console.log(gifUrl);
+  console.log(req.file.filename);
+
+  let sqlCreatePost;
+  let values;
+
+  sqlCreatePost = "INSERT INTO post VALUES (NULL, ?, ?, ?, NULL, NULL, NOW())";
+  values = [userID, legend, gifUrl];
+  mysql.query(sqlCreatePost, values, function (err, result) {
+      if (err) {
+          return res.status(500).json(err.message);
+      }
+      res.status(201).json({ message: "Post crée !" });
+  });
+};
+// FIN MIDDLEWARE
+
+// MIDDLEWARE DELETEPOST pour supprimer les messages
+exports.deletePost = (req, res, next) => {
+  const postID = req.params.id;
+  const userID = res.locals.userID;
+
+  let sqlDeletePost;
+  let sqlSelectPost;
+
+  sqlSelectPost = "SELECT gifUrl FROM Post WHERE postID = ?";
+  mysql.query(sqlSelectPost, [postID], function (err, result) {
+      if (result > 0) {
+          const filename = result[0].gifUrl.split("/images/")[1];
+          fs.unlink(`images/${filename}`, () => { // On supprime le fichier image en amont
+              sqlDeletePost = "DELETE FROM Post WHERE userID = ? AND postID = ?";
+              mysql.query(sqlDeletePost, [userID, postID], function (err, result) {
+                  if (err) {
+                      return res.status(500).json(err.message);
+                  }
+                  res.status(200).json({ message: "Post supprimé !" });
+              });
+          });
+      } else {
+          sqlDeletePost = "DELETE FROM Post WHERE userID = ? AND postID = ?";
+          mysql.query(sqlDeletePost, [userID, postID], function (err, result) {
+              if (err) {
+                  return res.status(500).json(err.message);
+              }
+              res.status(200).json({ message: "Post supprimé !" });
+          });
+      }
+      if (err) {
+          return res.status(500).json(err.message);
+      }
+
+
+  });
+};
+// FIN MIDDLEWARE
+
+// MIDDLEWARE CREATECOMMENT pour créer des commentaires
+exports.createComment = (req, res, next) => {
+  const postID = req.params.id;
+  const userID = res.locals.userID;
+  const body = req.body.body;
+
+  let sqlCreateComment;
+  let values;
+
+  sqlCreateComment = "INSERT INTO post VALUES (NULL, ?, NULL, NULL, ?, ?, NOW())";
+  values = [userID, postID, body];
+  mysql.query(sqlCreateComment, values, function (err, result) {
+      if (err) {
+          return res.status(500).json(err.message);
+      }
+      res.status(201).json({ message: "Commentaire crée !" });
+  });
+};
+// FIN MIDDLEWARE
+
+// MIDDLEWARE REACTPOST pour créer une réaction sur les messages
+exports.reactPost = (req, res, next) => {
+  const userID = res.locals.userID;
+  const reaction = req.body.reaction;
+  const postID = req.params.id;
+
+  let sqlReaction;
+  let values;
+
+  sqlReaction = `INSERT INTO Reaction VALUES (?, ?, ?, NOW()) ON DUPLICATE KEY UPDATE reaction = ?`;
+  values = [userID, postID, reaction, reaction];
+  mysql.query(sqlReaction, values, function (err, result) {
+      if (err) {
+          return res.status(500).json(err.message);
+      }
+      res.status(201).json({ message: "Reaction créee !" });
+  });
+};

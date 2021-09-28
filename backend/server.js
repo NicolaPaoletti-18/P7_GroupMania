@@ -1,9 +1,11 @@
    
-const http = require('http');
-const app = require('./app');
+// MODULES
+const http = require('http'); // Import du package http - https requiert un certificat SSL à obtenir avec un nom de domaine
+const app = require('./app'); // Import de app pour utilisation de l'application sur le serveur
+//FIN MODULES
 
-
-const normalizePort = val => {
+// FONCTION NORMALIZEPORT
+const normalizePort = val => { // Renvoie un port valide
   const port = parseInt(val, 10);
 
   if (isNaN(port)) {
@@ -14,12 +16,15 @@ const normalizePort = val => {
   }
   return false;
 };
-const port = normalizePort(process.env.PORT || '4200', () => {
-  console.log("Server (should) started on port 4200");
-});
-app.set('port', port);
+//FIN FONCTION
 
-const errorHandler = error => {
+// DEFINITION DU PORT
+const port = normalizePort(process.env.PORT || '3001');
+app.set('port', port);
+// FIN DEFINITION
+
+// FONCTION ERRORHANDLER
+const errorHandler = error => { // Gère les erreurs
   if (error.syscall !== 'listen') {
     throw error;
   }
@@ -38,14 +43,17 @@ const errorHandler = error => {
       throw error;
   }
 };
+// FIN FONCTION
 
-const server = http.createServer(app);
-
-server.on('error', errorHandler);
-server.on('listening', () => {
+// CREATION SERVEUR
+const server = http.createServer(app); // https requiert un certificat SSL à obtenir avec un nom de domaine
+server.on('error', errorHandler); // Gère les erreurs
+server.on('listening', () => { // Consigne le port ou canal dans la console
   const address = server.address();
   const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + port;
   console.log('Listening on ' + bind);
 });
 
+// Le serveur écoute le port définit plus haut
 server.listen(port);
+// FIN CREATION
