@@ -1,5 +1,5 @@
 // MODULES
-const mysql = require('../dbConfig').connection; //Connexion à la bd
+const mysql = require('../DBConnection').connection; //Connexion à la bd
 
 const bcrypt = require('bcrypt'); // Pour crypter le mot de passe
 const jwt = require("jsonwebtoken"); // Génère un token sécurisé

@@ -1,5 +1,6 @@
 // MODULES - Routeur Express
 const express = require("express");
+// Appel du routeur avec la méthode mise à disposition par Express
 const router = express.Router();
 // FIN MODULES
 
