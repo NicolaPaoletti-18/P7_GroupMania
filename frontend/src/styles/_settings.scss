@@ -43,10 +43,13 @@ a:visited {
 input,
 textarea {
   resize: none;
+  height: 30px;
+  padding: 10px;
+  margin-bottom: 10px;
   border-radius: 20px;
   width: 270px;
   font-family: $font-1;
-  background: $white;
+  background: $shadow;
 }
 textarea {
   &:focus {

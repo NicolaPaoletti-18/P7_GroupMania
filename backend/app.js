@@ -14,6 +14,17 @@ const userRoutes = require("./routes/user");
 const postRoutes = require("./routes/post");
 // FIN IMPORTATIONS
 
+// PARAMETRAGE DES HEADERS
+app.use((req, res, next) => { // Evite les erreurs CORS
+  // on indique que les ressources peuvent être partagées depuis n'importe quelle origine
+      res.setHeader('Access-Control-Allow-Origin', '*');
+  // on indique les entêtes qui seront utilisées après la pré-vérification cross-origin afin de donner l'autorisation
+      res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
+  // on indique les méthodes autorisées pour les requêtes HTTP
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+      next();
+  });
+
 // HELMET
 app.use(helmet()); // Protège l'app en paramétrant des Headers (notamment contre les failles XSS)
 // FIN HELMET
