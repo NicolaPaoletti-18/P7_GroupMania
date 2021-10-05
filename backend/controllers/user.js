@@ -1,5 +1,5 @@
 // MODULES
-const mysql = require('../DBConnection').connection; //Connexion à la bd
+//const mysql = require('../DBConnection').connection; //Connexion à la bd
 
 const bcrypt = require('bcrypt'); // Pour crypter le mot de passe
 const jwt = require("jsonwebtoken"); // Génère un token sécurisé
@@ -252,3 +252,8 @@ exports.role = (req, res, next) => {
         return res.status(200).json(result);
     });
 };
+
+exports.Logout = (req, res) => {
+    res.cookie(('jwt'), '', {MaxAge: 1});
+    res.redirection ('/');
+}

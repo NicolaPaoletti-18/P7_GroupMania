@@ -3,10 +3,12 @@ import {BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-do
 import Home from "../../pages/Home";
 import Conversation from "../../pages/Conversation";
 import Profil from "../../pages/Profile";
+import NavBar from "../Navbar";
 
 const index = () => {
   return (
     <Router>
+      <NavBar/>
       <Switch>
         <Route path='/' exact component = {Home} />
         <Route path='/profil' exact component = {Profil} />

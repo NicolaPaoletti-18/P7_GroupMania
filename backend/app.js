@@ -2,6 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const mysql = require('mysql');
 //const mysql = require('mysql');
 const app = express();
 const path = require('path');
@@ -31,17 +32,20 @@ app.use(helmet()); // Protège l'app en paramétrant des Headers (notamment cont
 
 app.use(cors());
 
-/*// connection MySQL DATABASE 
-exports.connection = mysql.createPool({
+// connection MySQL DATABASE 
+const db =mysql.createConnection({
   host: 'localhost',
-  user: 'NicolaAdmin',
+  user: 'root',
   password: 'IlmioaccountMySQL!!97',
   database: 'groupmania_db',
-  charset: 'utf8mb4',
-  timezone: 'local'
-}).then(() => console.log('Connexion à  réussie !'))
-.catch(() => console.log('Connexion à échouée !'));
-// FIN CONNECTION MySQL*/
+});
+db.connect((err) => {
+  if(err) {
+    throw err;
+  }else{
+  console.log("MySQL Connected ...")};
+})
+// FIN CONNECTION MySQL
 
 // BODYPARSER
 app.use(bodyParser.json()); // Rend le corps de la requête exploitable facilement
@@ -58,5 +62,5 @@ app.use("/api/post", postRoutes);
 // FIN ROUTES
 
 // Export de l'application express pour déclaration dans server.js
-
+module.exports = db;
 module.exports = app;
