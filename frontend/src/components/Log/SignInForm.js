@@ -17,7 +17,7 @@ const SignIn = () => {
     console.log('pass1');
     axios({
       method: 'POST',
-      url: `${process.env.REACT_APP_API_URL}/api/user/login`,//http://localhost:5000/,${process.env.REACT_APP_API_URL}
+      url: `http://localhost:3000/api/user/login`,//http://localhost:5000/,${process.env.REACT_APP_API_URL}
       withCredentials: true,
       data:{
         email,

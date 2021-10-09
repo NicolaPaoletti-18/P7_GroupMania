@@ -13,9 +13,9 @@ const NavBar = () => {
 
   return(
    <nav>
-     <div className = 'nav-container'>
+      <div className = 'nav-container'>
        <div className = 'logo'> 
-        <NavLink exact to ='/'>
+        <NavLink exact to ='/conversation'>
           <div className = 'logo'>
             <img src = '../images/icon-left-font-monochrome-black.png' alt ='logo'/>
           </div>

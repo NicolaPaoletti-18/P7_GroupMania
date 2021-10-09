@@ -8,7 +8,7 @@ export const UPDATE_PSEUDO = 'UPDATE_PSEUDO';
 export const getUser = (uid) => {
   return (dispatch) => {
     return axios
-    .get(`${process.env.REACT_APP_URL}/api/user/${uid}`)
+    .get(`http://localhost:3000/api/user/${uid}`)
     .then((res) => {
       dispatch({type: GET_USER, payload: res.data})
     })
@@ -21,10 +21,10 @@ export const getUser = (uid) => {
 export const uploadPicture = (data, id) => {
   return (dispatch) => {
     return axios
-    .post(`${process.env.REACT_APP_URL}/api/user/images`, data)
+    .post(`http://localhost:3000/api/user/images`, data)
     .then((res) => {
       return axios 
-      .get(`${process.env.REACT_APP_URL}/api/user/${id}`)
+      .get(`http://localhost:3000/api/user/${id}/profil`)
       .then((res) => {
         dispatch({type: UPLOAD_IMAGES, payload: res.data.image}) ;
       })
@@ -38,8 +38,8 @@ export const updateBio = (userId, bio ) => {
   return (dispatch) => {
     return axios ({
       method: 'put',
-      url: `${process.env.REACT_APP_URL}/api/user/modify` + userId,
-      data: bio
+      url: `http://localhost:3000/api/user/modify` + userId,
+      data: {bio}
     })
     .then((res) => {
       dispatch ({ type: UPDATE_BIO, payload: bio})
@@ -52,8 +52,8 @@ export const updatePseudo = (userId, pseudo ) => {
   return (dispatch) => {
     return axios ({
       method: 'put',
-      url: `${process.env.REACT_APP_URL}/api/user/modify` + userId,
-      data: pseudo
+      url: `http://localhost:3000/api/user/modify` + userId,
+      data:{pseudo} 
     })
     .then((res) => {
       dispatch ({ type: UPDATE_PSEUDO, payload: pseudo})

@@ -1,12 +1,16 @@
 // MODULES
-//const mysql = require('../DBConnection').connection; //Connexion à la bd
+const mysql = require('../DBConnection').connection; //Connexion à la bd
+
+
 
 const bcrypt = require('bcrypt'); // Pour crypter le mot de passe
 const jwt = require("jsonwebtoken"); // Génère un token sécurisé
 const fs = require("fs"); // Permet de gérer les fichiers stockés
+
 // FIN MODULES
 
 // MIDDLEWARE SIGNUP  - Inscription de l'utilisateur et hashage du mot de passe
+
 exports.signup = (req, res, next) => {
 
     bcrypt.hash(req.body.password, 10)
@@ -20,17 +24,19 @@ exports.signup = (req, res, next) => {
             let values;
 
             sqlSignup = "INSERT INTO user VALUES (NULL, ?, ?, ?, NULL, ?, NULL, avatarUrl, NOW())";
-            values = [email, firstName, lastName, password,];
+            values = [email, firstName, lastName, password];
             mysql.query(sqlSignup, values, function (err, result) {
                 if (err) {
                     return res.status(500).json(err.message);
                 }
                 res.status(201).json({ message: "Utilisateur créé !" });
+               // console.log(sqlSignup);
             });
         })
         .catch(e => res.status(500).json(e));
 };
 // FIN MIDDLEWARE
+
 
 
 // MIDDLEWARE LOGIN avec vérification de l'email unique
@@ -40,7 +46,7 @@ exports.login = (req, res, next) => {
 
     const sqlFindUser = "SELECT userID, password FROM User WHERE email = ?";
 //recherche de l'utilisateur dans la base de données
-    mysql.query(sqlFindUser, [email], function (err, result) {
+    db.query(sqlFindUser, [email], function (err, result) {
         if (err) {
             return res.status(500).json(err.message);
         }

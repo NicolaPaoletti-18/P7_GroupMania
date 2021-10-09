@@ -1,4 +1,5 @@
    
+
 // MODULES
 const http = require('http'); // Import du package http - https requiert un certificat SSL à obtenir avec un nom de domaine
 const app = require('./app'); // Import de app pour utilisation de l'application sur le serveur
@@ -56,4 +57,3 @@ server.on('listening', () => { // Consigne le port ou canal dans la console
 
 // Le serveur écoute le port définit plus haut
 server.listen(port);
-// FIN CREATION

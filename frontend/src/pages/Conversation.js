@@ -1,14 +1,14 @@
 import React from "react";
 import LeftNav from "../components/Routers/LeftNav";
+import Thread from "../components/Thread";
 
 const Conversation = () => {
  return (
- <div className="login-page">
+ <div className="home">
    
-   <div className="log-container">
    <LeftNav />
-     <h1> 
-     conversation</h1>
+   <div className= 'main'>
+     <Thread />
    </div>
  </div>
  );

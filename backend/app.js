@@ -2,10 +2,11 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const mysql = require('mysql');
-//const mysql = require('mysql');
+
+
 const app = express();
 const path = require('path');
+
 const helmet = require("helmet");
 const expressSanitizer = require('express-sanitizer');
 // FIN MODULES
@@ -33,18 +34,19 @@ app.use(helmet()); // Protège l'app en paramétrant des Headers (notamment cont
 app.use(cors());
 
 // connection MySQL DATABASE 
-const db =mysql.createConnection({
+/*const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: 'IlmioaccountMySQL!!97',
   database: 'groupmania_db',
 });
-db.connect((err) => {
+mysql.connect((err) => {
   if(err) {
     throw err;
   }else{
+   
   console.log("MySQL Connected ...")};
-})
+})*/
 // FIN CONNECTION MySQL
 
 // BODYPARSER
@@ -62,5 +64,5 @@ app.use("/api/post", postRoutes);
 // FIN ROUTES
 
 // Export de l'application express pour déclaration dans server.js
-module.exports = db;
+
 module.exports = app;
