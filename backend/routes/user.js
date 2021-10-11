@@ -16,7 +16,6 @@ const multer = require("../middleware/multer-config"); // Permet d'envoyer un fi
 // ROUTE
 router.post("/signup", userCtrl.signup);
 router.post("/login", userCtrl.login);
-router.get("/logout", auth, userCtrl.Logout);
 router.delete("/delete", auth, userCtrl.delete);
 router.get("/:id/profile", auth, userCtrl.profile);
 router.get("/role", userCtrl.role);

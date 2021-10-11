@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 
 //connection MySQL DATABASE 
-const connection = mysql.createConnection({
+exports.connection = mysql.createPool({
   host: 'localhost',
   user: 'root',
   password: 'IlmioaccountMySQL!!97',
@@ -9,13 +9,7 @@ const connection = mysql.createConnection({
   charset: 'utf8mb4',
   timezone: 'local'
 });
-connection.connect(function(err){
-  if (err) {throw err}
-  else{
-    console.log("MySQL Connected ...");
-  }
-  
-});
 
-module.exports = connection;
+  
+// module.exports = connection;
 // FIN CONNECTION MySQL
