@@ -1,28 +1,38 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="container-fluid container-md">
+      <router-view />
+    </div>
   </div>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
-
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
-</script>
-
-<style lang="scss">
+<style lang="scss"> // Pour respecter les standarts WCAG je me suis servi du css en modifiant les couleurs
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  color: #000000;
+  background-color: #fafbff;
+  min-height: 100%;
+  a {
+    color: #2c3e50;
+  }
+  nav {
+  padding: 30px;
+  a {
+    font-weight: bold;
+    color: #2c3e50;
+    &.router-link-exact-active {
+      color: #0132c6;
+    }
+  }
+}
+}
+.text-muted {
+    color: #000000!important;
+}
+.text-danger {
+    color: #0132c6!important;
 }
 </style>
