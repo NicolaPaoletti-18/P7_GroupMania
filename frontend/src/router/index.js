@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 import Login from '../views/Login.vue';
 import Signup from '../views/SignUp.vue';
 import Feed from '../views/Feed.vue';
-//import FeedID from '../views/FeedID.vue';
+import FeedID from '../views/FeedID.vue';
 //import Profile from '../views/Profile.vue';
 
 Vue.use(VueRouter);
@@ -23,13 +23,13 @@ const routes = [
     path: '/Feed',
     name: 'Feed',
     component: Feed
-  }, /*
+  }, 
   {
     path: '/Feed/:id',
     name: 'FeedID',
     component: FeedID
   },
-  {
+ /* {
     path: '/Profile/:id',
     name: 'Profile',
     component: Profile

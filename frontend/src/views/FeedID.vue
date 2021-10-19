@@ -1,20 +1,13 @@
-<!-- VIEW FEED - Page principale avec la navigation, la création et les posts -->
+<!-- VIEW FEEDID - Page d'un post avec la navigation, le post et ses commentaires -->
 
 <template>
   <div>
     <!-- Alert si l'user est non connecté -->
-    <Alert
-      v-if="!connected"
-      :alertType="alert.type"
-      :alertMessage="alert.message"
-    />
+    <Alert v-if="!connected" :alertType="alert.type" :alertMessage="alert.message" />
     <!-- Fin -->
     <div v-else>
       <!-- Navigation -->
       <NavFeed />
-      <!-- Fin -->
-      <!-- Création des posts -->
-      <CreatePost v-on:post-sent="post" />
       <!-- Fin -->
       <!-- Alert pour la création et suppression des posts -->
       <Alert
@@ -23,115 +16,142 @@
         :alertMessage="alert.message"
       />
       <!-- Fin -->
-
       <!-- Post -->
       <Post
-        v-for="post in posts"
-        :key="post.postID"
-        :idPost="post.postID"
-        :idUser="post.userID"
-        v-on:d-comment-input="dCommentInput(post.postID)"
-        v-on:reaction-down="sendReaction(post.postID, -1)"
-        v-on:reaction-up="sendReaction(post.postID, 1)"
-        v-on:reaction-none="sendReaction(post.postID, 0)"
-        :reaction="post.yourReaction"
+        v-if="posts"
+        :idUser="posts[indexLastPost].userID"
+        v-on:d-comment-input="dCommentInput(posts[indexLastPost].postID)"
+        v-on:reaction-down="sendReaction(posts[indexLastPost].postID, -1)"
+        v-on:reaction-up="sendReaction(posts[indexLastPost].postID, 1)"
+        v-on:reaction-none="sendReaction(posts[indexLastPost].postID, 0)"
+        :reaction="posts[indexLastPost].yourReaction"
       >
-        <!-- Bouton de suppréssion du post -->
+        <!-- Bouton suppréssion du post -->
         <template v-slot:postDelete v-if="userRole == 'admin'">
           <i
             class="fas fa-times"
             aria-hidden="true"
             title="Supprimer le post"
             role="button"
-            v-on:click="deletePost(post.postID)"
+            v-on:click="deletePost(posts[indexLastPost].postID)"
           ></i>
           <span class="sr-only">Supprimer le post</span>
         </template>
-        <template v-slot:postDelete v-else-if="post.yourPost > 0">
+        <template v-slot:postDelete v-else-if="posts[indexLastPost].yourPost > 0">
           <i
             class="fas fa-times"
             aria-hidden="true"
             title="Supprimer le post"
             role="button"
-            v-on:click="deletePost(post.postID)"
+            v-on:click="deletePost(posts[indexLastPost].postID)"
           ></i>
           <span class="sr-only">Supprimer le post</span>
         </template>
         <!-- Fin -->
 
         <!-- Afficher les images (gif, jpg, jpeg) dans les posts -->
-        <template
-          v-slot:postGif
-          v-if="
-            post.gifUrl.includes('.gif') ||
-              post.gifUrl.includes('.jpg') ||
-              post.gifUrl.includes('.jpeg')
-          "
-        >
-          <img
-            :src="post.gifUrl"
-            class="card-img gif-img"
-            alt="Image du post"
-          />
+        <template v-slot:postGif v-if="posts[indexLastPost].gifUrl.includes('.gif') || posts[indexLastPost].gifUrl.includes('.jpg') || posts[indexLastPost].gifUrl.includes('.jpeg')">
+          <img :src="posts[indexLastPost].gifUrl" class="card-img gif-img" alt="Image du post" />
         </template>
         <!-- Fin -->
 
         <!-- Afficher les vidéos (mp4) dans les posts -->
-        <template v-slot:postGif v-else-if="post.gifUrl.includes('.mp4')">
-          <video width="100%" controls>
-            <source :src="post.gifUrl" type="video/mp4" />
-            Your browser does not support HTML video.
-          </video>
+        <template v-slot:postGif v-else-if="posts[indexLastPost].gifUrl.includes('.mp4')">
+        <video width="100%" controls>
+        <source :src="posts[indexLastPost].gifUrl" type="video/mp4">
+        Your browser does not support HTML video.
+        </video>
         </template>
         <!-- Fin -->
 
         <!-- User -->
         <template v-slot:userAvatar>
           <img
-            :src="post.avatarUrl"
+            :src="posts[indexLastPost].avatarUrl"
             class="card-img avatar rounded-circle mr-1"
             alt="Avatar de l'utilisateur"
           />
         </template>
-        <template v-slot:userName>{{
-          post.firstName + " " + post.lastName
-        }}</template>
-        <template v-slot:userPseudo v-if="post.pseudo !== null">{{
-          "@" + post.pseudo
-        }}</template>
+        <template
+          v-slot:userName
+        >{{ posts[indexLastPost].firstName + ' ' + posts[indexLastPost].lastName }}</template>
+        <template
+          v-slot:userPseudo
+          v-if="posts[indexLastPost].pseudo !== null"
+        >{{ '@' + posts[indexLastPost].pseudo }}</template>
         <!-- Fin -->
         <!-- Corps du post -->
-        <template v-slot:postLegend>{{ post.legend }}</template>
+        <template v-slot:postLegend>{{ posts[indexLastPost].legend }}</template>
         <!-- Fin -->
+
         <!-- Création d'un commentaire -->
         <template v-slot:createComment>
           <CreateComment
             v-on:comment-sent="updateBody"
-            v-if="commentInputShow && commentID === post.postID"
+            v-if="commentInputShow && commentID === posts[indexLastPost].postID"
           >
             <button
               class="btn btn-light form-control text-center"
               type="submit"
-              v-on:click.prevent="postComment(post.postID)"
-            >
-              Publier
-            </button>
+              v-on:click.prevent="postComment(posts[indexLastPost].postID)"
+            >Publier</button>
           </CreateComment>
           <Alert
-            v-if="
-              alert.active && alert.activeComment && commentID === post.postID
-            "
+            v-if="alert.active && alert.activeComment && (commentID === posts[indexLastPost].postID)"
             :alertType="alert.type"
             :alertMessage="alert.message"
           />
         </template>
         <!-- Fin -->
         <!-- Footer post -->
-        <template v-slot:postDate>{{ post.dateCreation }}</template>
-        <template v-slot:postUp>{{ post.countUp }}</template>
-        <template v-slot:postDown>{{ post.countDown }}</template>
-        <!-- Fin -->
+        <template v-slot:postDate>{{ posts[indexLastPost].dateCreation }}</template>
+        <template v-slot:postUp>{{ posts[indexLastPost].countUp }}</template>
+        <template v-slot:postDown>{{ posts[indexLastPost].countDown }}</template>
       </Post>
+      <!-- Fin -->
+
+      <!-- Commentaire -->
+      <Comment
+        v-for="comment in comments"
+        :key="comment.postID"
+        :idUser="comment.userID"
+        v-on:reaction-down="sendReaction(comment.postID, -1)"
+        v-on:reaction-up="sendReaction(comment.postID, 1)"
+        v-on:reaction-none="sendReaction(comment.postID, 0)"
+        :reaction="comment.yourReaction"
+      >
+        <!-- Bouton délétion commentaire -->
+        <template v-slot:commentDelete v-if="comment.yourPost > 0">
+          <i
+            class="fas fa-times"
+            aria-hidden="true"
+            title="Supprimer le commentaire"
+            role="button"
+            v-on:click="deletePost(comment.postID)"
+          ></i>
+          <span class="sr-only">Supprimer le commentaire</span>
+        </template>
+        <!-- Fin -->
+        <!-- User -->
+        <template v-slot:userAvatar>
+          <img
+            :src="comment.avatarUrl"
+            class="card-img avatar rounded-circle mr-1"
+            alt="Avatar de l'utilisateur"
+          />
+        </template>
+        <template v-slot:userName>{{ comment.firstName + ' ' + comment.lastName }}</template>
+        <template v-slot:userPseudo v-if="comment.pseudo !== null">{{ '@' + comment.pseudo }}</template>
+        <!-- Fin -->
+        <!-- Corps du commentaire -->
+        <template v-slot:commentBody>{{ comment.body }}</template>
+        <!-- Fin -->
+        <!-- Footer commentaire -->
+        <template v-slot:commentDate>{{ comment.dateCreation }}</template>
+        <template v-slot:commentUp>{{ comment.countUp }}</template>
+        <template v-slot:commentDown>{{ comment.countDown }}</template>
+        <!-- Fin -->
+      </Comment>
       <!-- Fin -->
     </div>
   </div>
@@ -141,16 +161,16 @@
 import NavFeed from "@/components/NavFeed.vue";
 import Post from "@/components/Post.vue";
 import Alert from "@/components/Alert.vue";
-import CreatePost from "@/components/CreatePost.vue";
 import CreateComment from "@/components/CreateComment.vue";
+import Comment from "@/components/Comment.vue";
 export default {
-  name: "Feed",
+  name: "FeedID",
   components: {
     NavFeed,
     Post,
     Alert,
-    CreatePost,
     CreateComment,
+    Comment,
   },
   data: () => {
     return {
@@ -161,12 +181,22 @@ export default {
         type: "",
         message: "",
       },
-      posts: [], // Stock les posts
+      posts: [false], // Stock le post et ses commentaires
       body: "", // Stock le corps du commentaire
       commentInputShow: false, // Défini si l'input de la création de commentaire doit être montré
       commentID: "", // Stock l'id du post pour lequel le commentaire sera envoyé
       userRole: "",
     };
+  },
+  computed: {
+    indexLastPost() {
+      // Permet de ne prendre que le post étant le dernier élément du tableau
+      return this.posts.length - 1;
+    },
+    comments() {
+      // Permet d'exclure le post pour ne garder que les commentaires
+      return this.posts.filter((e) => e.postID != this.$route.params.id);
+    },
   },
   methods: {
     alertConstant(type, message) {
@@ -182,7 +212,7 @@ export default {
       dataAlert.active = true;
       dataAlert.type = type;
       dataAlert.message = message;
-      setTimeout(function() {
+      setTimeout(function () {
         dataAlert.active = false;
         dataAlert.activeComment = false;
         dataAlert.type = "";
@@ -209,9 +239,9 @@ export default {
         });
     },
     get() {
-      // Récupère les posts
+      // Récupère le post et ses commentaires
       this.$axios
-        .get("post")
+        .get(`post/${this.$route.params.id}`)
         .then((data) => {
           this.posts = data.data;
         })
@@ -219,33 +249,26 @@ export default {
           if (e.response.status === 401) {
             this.alertConstant("alert-danger mt-5", "Veuillez vous connecter");
           }
+          if (e.response.status === 400) {
+            this.alertConstant("alert-danger mt-5", "Aucun post à afficher");
+          }
         });
     },
-    post(data) {
-      // Poste un post
-      const formData = new FormData();
-      formData.append("image", data.image);
-      formData.append("legend", data.legend);
-      this.$axios
-        .post("post", formData)
-        .then(() => {
-          this.get();
-          this.alertActive("alert-success", "Post publié !");
-        })
-        .catch((e) => console.log(e));
-    },
     deletePost(postID) {
-      // Supprime un post si c'est le notre
+      // Supprime un post ou un commentaire si c'est le notre
       this.$axios
         .delete("post/" + postID)
         .then(() => {
+          if (postID === this.$route.params.id) {
+            this.$router.push({ name: "Feed"});
+          }
           const indexPost = this.$data.posts
             .map((e) => {
               return e.postID;
             })
             .indexOf(parseInt(postID));
           this.$data.posts.splice(indexPost, 1);
-          this.alertActive("alert-warning", "Post supprimé !");
+          this.alertActive("alert-warning", "Commentaire supprimé !");
         })
         .catch((e) => console.log(e));
     },
@@ -272,7 +295,7 @@ export default {
       this.body = data.body;
     },
     postComment(postID) {
-      // Poste le commentaire
+      // Poste un commentaire
       const formValid = document
         .getElementsByName("formComment")[0]
         .checkValidity();
@@ -280,6 +303,7 @@ export default {
         this.$axios
           .post(`post/${postID}/comment`, { body: this.body })
           .then(() => {
+            this.get();
             this.commentInputShow = false;
             this.alert.activeComment = true;
             this.alertActive("alert-success mt-1", "Commentaire publié !");
@@ -294,12 +318,14 @@ export default {
     this.getUserRole();
   },
   mounted() {
-    // Récupère les posts et défini le titre
+    // Récupère le post et ses commentaires et défini le titre
+    this.getUserRole();
     this.get();
-    document.title = "Fil d'actualité | Groupomania";
+    document.title = "Post | Groupomania";
   },
 };
 </script>
+
 
 <style scoped lang="scss">
 .avatar {

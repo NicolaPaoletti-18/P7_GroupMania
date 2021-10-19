@@ -13,9 +13,10 @@
         v-on:data-sent="updateDataLogin"
         v-on:request-sent="signup"
       >
-        <template
-          v-slot:messagePassword
-        >Doit contenir: 1 majuscule, 1 minuscule et 1 chiffre (8 caractères minimum)</template>
+        <template v-slot:messagePassword
+          >Doit contenir: 1 majuscule, 1 minuscule et 1 chiffre (8 caractères
+          minimum)</template
+        >
         <template v-slot:messageError>{{ message }}</template>
       </InfoLogin>
     </form>
@@ -64,8 +65,9 @@ export default {
             this.$axios.defaults.headers.common["Authorization"] =
               "Bearer " + data.data.token;
             this.$router.push("Feed");
-          });
-        })
+            window.alert("COMPTE CRÉÉ");
+          }) 
+        }) 
         .catch((e) => {
           if (e.response.status === 500) {
             this.message = "Erreur serveur";

@@ -31,8 +31,9 @@
 }
 .text-muted {
     color: #000000!important;
+    font-size: 15px;
 }
 .text-danger {
-    color: #0132c6!important;
+    color: #ed0e0e!important;
 }
 </style>
