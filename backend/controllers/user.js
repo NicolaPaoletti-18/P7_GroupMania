@@ -1,7 +1,6 @@
 // MODULES
 const mysql = require("../DBConnection").connection; //Connexion à la bd
 const env = require("../environment"); // Récupère les variables d'environnement
-
 const bcrypt = require("bcrypt"); // Pour crypter le mot de passe
 const jwt = require("jsonwebtoken"); // Génère un token sécurisé
 const fs = require("fs"); // Permet de gérer les fichiers stockés
@@ -26,11 +25,11 @@ exports.signup = (req, res, next) => {
         "INSERT INTO user VALUES (NULL, ?, ?, ?, NULL, ?, NULL, avatarUrl, NOW())";
       values = [email, firstName, lastName, password];
       mysql.query(sqlSignup, values, function (err, result) {
-        if (err) {
+        if (err) {// console.log(sqlSignup);
           return res.status(501).json(err.message);
         }
         res.status(201).json({ message: "Utilisateur créé !" });
-        // console.log(sqlSignup);
+        
       });
     })
     .catch((e) => res.status(500).json(e));
@@ -263,9 +262,10 @@ exports.modify = (req, res, next) => {
 exports.role = (req, res, next) => {
   const userID = res.locals.userID;
 
-  sqlFindUser = "SELECT role FROM User WHERE userID = ?";
+  sqlFindUser = "SELECT role FROM user WHERE userID = ?";
   mysql.query(sqlFindUser, [userID], function (err, result) {
     if (err) {
+      console.log(err);
       return res.status(500).json(err.message);
     }
     if (result.length == 0) {
@@ -274,5 +274,3 @@ exports.role = (req, res, next) => {
     return res.status(200).json(result);
   });
 };
-
-

@@ -3,11 +3,7 @@
 <template>
   <div>
     <!-- Alert si l'user est non connecté -->
-    <Alert
-      v-if="!connected"
-      :alertType="alert.type"
-      :alertMessage="alert.message"
-    />
+    <Alert v-if="!connected" :alertType="alert.type" :alertMessage="alert.message" />
     <!-- Fin -->
     <div v-else>
       <!-- Navigation -->
@@ -37,7 +33,7 @@
         :reaction="post.yourReaction"
       >
         <!-- Bouton de suppréssion du post -->
-        <template v-slot:postDelete v-if="userRole == 'admin'">
+        <template v-slot:postDelete v-if="userIsAdmin == true">
           <i
             class="fas fa-times"
             aria-hidden="true"
@@ -60,28 +56,17 @@
         <!-- Fin -->
 
         <!-- Afficher les images (gif, jpg, jpeg) dans les posts -->
-        <template
-          v-slot:postGif
-          v-if="
-            post.gifUrl.includes('.gif') ||
-              post.gifUrl.includes('.jpg') ||
-              post.gifUrl.includes('.jpeg')
-          "
-        >
-          <img
-            :src="post.gifUrl"
-            class="card-img gif-img"
-            alt="Image du post"
-          />
+        <template v-slot:postGif v-if="post.gifUrl.includes('.gif') || post.gifUrl.includes('.jpg') || post.gifUrl.includes('.jpeg')">
+          <img :src="post.gifUrl" class="card-img gif-img" alt="Image du post" />
         </template>
         <!-- Fin -->
 
         <!-- Afficher les vidéos (mp4) dans les posts -->
         <template v-slot:postGif v-else-if="post.gifUrl.includes('.mp4')">
-          <video width="100%" controls>
-            <source :src="post.gifUrl" type="video/mp4" />
-            Your browser does not support HTML video.
-          </video>
+        <video width="100%" controls>
+        <source :src="post.gifUrl" type="video/mp4">
+        Your browser does not support HTML video.
+        </video>
         </template>
         <!-- Fin -->
 
@@ -93,12 +78,8 @@
             alt="Avatar de l'utilisateur"
           />
         </template>
-        <template v-slot:userName>{{
-          post.firstName + " " + post.lastName
-        }}</template>
-        <template v-slot:userPseudo v-if="post.pseudo !== null">{{
-          "@" + post.pseudo
-        }}</template>
+        <template v-slot:userName>{{ post.firstName + ' ' + post.lastName }}</template>
+        <template v-slot:userPseudo v-if="post.pseudo !== null">{{ '@' + post.pseudo }}</template>
         <!-- Fin -->
         <!-- Corps du post -->
         <template v-slot:postLegend>{{ post.legend }}</template>
@@ -113,14 +94,10 @@
               class="btn btn-light form-control text-center"
               type="submit"
               v-on:click.prevent="postComment(post.postID)"
-            >
-              Publier
-            </button>
+            >Publier</button>
           </CreateComment>
           <Alert
-            v-if="
-              alert.active && alert.activeComment && commentID === post.postID
-            "
+            v-if="alert.active && alert.activeComment && (commentID === post.postID)"
             :alertType="alert.type"
             :alertMessage="alert.message"
           />
@@ -165,7 +142,7 @@ export default {
       body: "", // Stock le corps du commentaire
       commentInputShow: false, // Défini si l'input de la création de commentaire doit être montré
       commentID: "", // Stock l'id du post pour lequel le commentaire sera envoyé
-      userRole: "",
+      userIsAdmin: false,
     };
   },
   methods: {
@@ -182,7 +159,7 @@ export default {
       dataAlert.active = true;
       dataAlert.type = type;
       dataAlert.message = message;
-      setTimeout(function() {
+      setTimeout(function () {
         dataAlert.active = false;
         dataAlert.activeComment = false;
         dataAlert.type = "";
@@ -194,7 +171,9 @@ export default {
       this.$axios
         .get("user/role")
         .then((data) => {
-          this.userRole = data.data[0].role;
+          if (data.role == 'admin'){
+            this.userIsAdmin = true;
+          }
         })
         .catch((e) => {
           if (e.response.status === 401) {
@@ -213,6 +192,7 @@ export default {
       this.$axios
         .get("post")
         .then((data) => {
+          console.log('pass recupere les posts');
           this.posts = data.data;
         })
         .catch((e) => {
@@ -259,7 +239,7 @@ export default {
         .catch((e) => console.log(e));
     },
     dCommentInput(postID) {
-      // Dévoile l'input pour créer un commentaire
+      //Dévoile l'input pour créer un commentaire
       if (this.commentInputShow) {
         this.commentID = postID;
       } else {
@@ -290,11 +270,9 @@ export default {
       }
     },
   },
-  created() {
-    this.getUserRole();
-  },
   mounted() {
     // Récupère les posts et défini le titre
+    //this.getUserRole();
     this.get();
     document.title = "Fil d'actualité | Groupomania";
   },

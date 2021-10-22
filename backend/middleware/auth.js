@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken"); // Crée et check un token d'identification sécurisé
-
+const env = require('../environment'); // Récupèere les variables d'environnement 
 // FIN MODULES
 
 // MIDDLEWARE AUTH
