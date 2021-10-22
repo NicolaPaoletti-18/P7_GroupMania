@@ -1,15 +1,15 @@
 SET NAMES utf8;
 
-DROP DATABASE IF EXISTS Groupomania_db;
+DROP DATABASE IF EXISTS Groupmania_db;
 
-CREATE DATABASE Groupomania_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE Groupmania_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 
 GRANT ALL
-ON Groupomania_db.*
+ON Groupmania_db.*
 TO 'nicolap7';
 
-USE Groupomania_db;
+USE Groupmania_db;
 
 CREATE TABLE User (
 	userID SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,

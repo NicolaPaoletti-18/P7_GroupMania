@@ -22,11 +22,11 @@ exports.signup = (req, res, next) => {
       let values;
 
       sqlSignup =
-        "INSERT INTO user VALUES (NULL, ?, ?, ?, NULL, ?, NULL, avatarUrl, NOW())";
+        "INSERT INTO user VALUES (NULL, ?, ?, ?, NULL, ?, NULL, avatarUrl, NOW(), NULL)";
       values = [email, firstName, lastName, password];
       mysql.query(sqlSignup, values, function (err, result) {
-        if (err) {// console.log(sqlSignup);
-          return res.status(501).json(err.message);
+        if (err) { ;
+          return res.status(500).json(err.message);
         }
         res.status(201).json({ message: "Utilisateur créé !" });
         

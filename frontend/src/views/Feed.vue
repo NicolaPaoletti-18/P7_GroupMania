@@ -3,7 +3,11 @@
 <template>
   <div>
     <!-- Alert si l'user est non connecté -->
-    <Alert v-if="!connected" :alertType="alert.type" :alertMessage="alert.message" />
+    <Alert
+      v-if="!connected"
+      :alertType="alert.type"
+      :alertMessage="alert.message"
+    />
     <!-- Fin -->
     <div v-else>
       <!-- Navigation -->
@@ -56,17 +60,28 @@
         <!-- Fin -->
 
         <!-- Afficher les images (gif, jpg, jpeg) dans les posts -->
-        <template v-slot:postGif v-if="post.gifUrl.includes('.gif') || post.gifUrl.includes('.jpg') || post.gifUrl.includes('.jpeg')">
-          <img :src="post.gifUrl" class="card-img gif-img" alt="Image du post" />
+        <template
+          v-slot:postGif
+          v-if="
+            post.gifUrl.includes('.gif') ||
+              post.gifUrl.includes('.jpg') ||
+              post.gifUrl.includes('.jpeg')
+          "
+        >
+          <img
+            :src="post.gifUrl"
+            class="card-img gif-img"
+            alt="Image du post"
+          />
         </template>
         <!-- Fin -->
 
         <!-- Afficher les vidéos (mp4) dans les posts -->
         <template v-slot:postGif v-else-if="post.gifUrl.includes('.mp4')">
-        <video width="100%" controls>
-        <source :src="post.gifUrl" type="video/mp4">
-        Your browser does not support HTML video.
-        </video>
+          <video width="100%" controls>
+            <source :src="post.gifUrl" type="video/mp4" />
+            Your browser does not support HTML video.
+          </video>
         </template>
         <!-- Fin -->
 
@@ -78,8 +93,12 @@
             alt="Avatar de l'utilisateur"
           />
         </template>
-        <template v-slot:userName>{{ post.firstName + ' ' + post.lastName }}</template>
-        <template v-slot:userPseudo v-if="post.pseudo !== null">{{ '@' + post.pseudo }}</template>
+        <template v-slot:userName>{{
+          post.firstName + " " + post.lastName
+        }}</template>
+        <template v-slot:userPseudo v-if="post.pseudo !== null">{{
+          "@" + post.pseudo
+        }}</template>
         <!-- Fin -->
         <!-- Corps du post -->
         <template v-slot:postLegend>{{ post.legend }}</template>
@@ -94,10 +113,14 @@
               class="btn btn-light form-control text-center"
               type="submit"
               v-on:click.prevent="postComment(post.postID)"
-            >Publier</button>
+            >
+              Publier
+            </button>
           </CreateComment>
           <Alert
-            v-if="alert.active && alert.activeComment && (commentID === post.postID)"
+            v-if="
+              alert.active && alert.activeComment && commentID === post.postID
+            "
             :alertType="alert.type"
             :alertMessage="alert.message"
           />
@@ -159,7 +182,7 @@ export default {
       dataAlert.active = true;
       dataAlert.type = type;
       dataAlert.message = message;
-      setTimeout(function () {
+      setTimeout(function() {
         dataAlert.active = false;
         dataAlert.activeComment = false;
         dataAlert.type = "";
@@ -171,7 +194,7 @@ export default {
       this.$axios
         .get("user/role")
         .then((data) => {
-          if (data.role == 'admin'){
+          if (data.role == "admin") {
             this.userIsAdmin = true;
           }
         })
@@ -210,6 +233,7 @@ export default {
         .post("post", formData)
         .then(() => {
           this.get();
+          console.log("pass post publiè");
           this.alertActive("alert-success", "Post publié !");
         })
         .catch((e) => console.log(e));
