@@ -3,7 +3,11 @@
 <template>
   <div>
     <!-- Alert si l'user est non connecté -->
-    <Alert v-if="!connected" :alertType="alert.type" :alertMessage="alert.message" />
+    <Alert
+      v-if="!connected"
+      :alertType="alert.type"
+      :alertMessage="alert.message"
+    />
     <!-- Fin -->
     <div v-else>
       <!-- Navigation -->
@@ -37,7 +41,10 @@
           ></i>
           <span class="sr-only">Supprimer le post</span>
         </template>
-        <template v-slot:postDelete v-else-if="posts[indexLastPost].yourPost > 0">
+        <template
+          v-slot:postDelete
+          v-else-if="posts[indexLastPost].yourPost > 0"
+        >
           <i
             class="fas fa-times"
             aria-hidden="true"
@@ -50,17 +57,31 @@
         <!-- Fin -->
 
         <!-- Afficher les images (gif, jpg, jpeg) dans les posts -->
-        <template v-slot:postGif v-if="posts[indexLastPost].gifUrl.includes('.gif') || posts[indexLastPost].gifUrl.includes('.jpg') || posts[indexLastPost].gifUrl.includes('.jpeg')">
-          <img :src="posts[indexLastPost].gifUrl" class="card-img gif-img" alt="Image du post" />
+        <template
+          v-slot:postGif
+          v-if="
+            posts[indexLastPost].gifUrl.includes('.gif') ||
+              posts[indexLastPost].gifUrl.includes('.jpg') ||
+              posts[indexLastPost].gifUrl.includes('.jpeg')
+          "
+        >
+          <img
+            :src="posts[indexLastPost].gifUrl"
+            class="card-img gif-img"
+            alt="Image du post"
+          />
         </template>
         <!-- Fin -->
 
         <!-- Afficher les vidéos (mp4) dans les posts -->
-        <template v-slot:postGif v-else-if="posts[indexLastPost].gifUrl.includes('.mp4')">
-        <video width="100%" controls>
-        <source :src="posts[indexLastPost].gifUrl" type="video/mp4">
-        Your browser does not support HTML video.
-        </video>
+        <template
+          v-slot:postGif
+          v-else-if="posts[indexLastPost].gifUrl.includes('.mp4')"
+        >
+          <video width="100%" controls>
+            <source :src="posts[indexLastPost].gifUrl" type="video/mp4" />
+            Your browser does not support HTML video.
+          </video>
         </template>
         <!-- Fin -->
 
@@ -72,13 +93,14 @@
             alt="Avatar de l'utilisateur"
           />
         </template>
-        <template
-          v-slot:userName
-        >{{ posts[indexLastPost].firstName + ' ' + posts[indexLastPost].lastName }}</template>
+        <template v-slot:userName>{{
+          posts[indexLastPost].firstName + " " + posts[indexLastPost].lastName
+        }}</template>
         <template
           v-slot:userPseudo
           v-if="posts[indexLastPost].pseudo !== null"
-        >{{ '@' + posts[indexLastPost].pseudo }}</template>
+          >{{ "@" + posts[indexLastPost].pseudo }}</template
+        >
         <!-- Fin -->
         <!-- Corps du post -->
         <template v-slot:postLegend>{{ posts[indexLastPost].legend }}</template>
@@ -94,19 +116,29 @@
               class="btn btn-light form-control text-center"
               type="submit"
               v-on:click.prevent="postComment(posts[indexLastPost].postID)"
-            >Publier</button>
+            >
+              Publier
+            </button>
           </CreateComment>
           <Alert
-            v-if="alert.active && alert.activeComment && (commentID === posts[indexLastPost].postID)"
+            v-if="
+              alert.active &&
+                alert.activeComment &&
+                commentID === posts[indexLastPost].postID
+            "
             :alertType="alert.type"
             :alertMessage="alert.message"
           />
         </template>
         <!-- Fin -->
         <!-- Footer post -->
-        <template v-slot:postDate>{{ posts[indexLastPost].dateCreation }}</template>
+        <template v-slot:postDate>{{
+          posts[indexLastPost].dateCreation
+        }}</template>
         <template v-slot:postUp>{{ posts[indexLastPost].countUp }}</template>
-        <template v-slot:postDown>{{ posts[indexLastPost].countDown }}</template>
+        <template v-slot:postDown>{{
+          posts[indexLastPost].countDown
+        }}</template>
       </Post>
       <!-- Fin -->
 
@@ -140,8 +172,12 @@
             alt="Avatar de l'utilisateur"
           />
         </template>
-        <template v-slot:userName>{{ comment.firstName + ' ' + comment.lastName }}</template>
-        <template v-slot:userPseudo v-if="comment.pseudo !== null">{{ '@' + comment.pseudo }}</template>
+        <template v-slot:userName>{{
+          comment.firstName + " " + comment.lastName
+        }}</template>
+        <template v-slot:userPseudo v-if="comment.pseudo !== null">{{
+          "@" + comment.pseudo
+        }}</template>
         <!-- Fin -->
         <!-- Corps du commentaire -->
         <template v-slot:commentBody>{{ comment.body }}</template>
@@ -212,7 +248,7 @@ export default {
       dataAlert.active = true;
       dataAlert.type = type;
       dataAlert.message = message;
-      setTimeout(function () {
+      setTimeout(function() {
         dataAlert.active = false;
         dataAlert.activeComment = false;
         dataAlert.type = "";
@@ -224,7 +260,7 @@ export default {
       this.$axios
         .get("user/role")
         .then((data) => {
-          if (data.role == 'admin'){
+          if (data.role == "admin") {
             this.userIsAdmin = true;
           }
         })
@@ -258,11 +294,13 @@ export default {
     },
     deletePost(postID) {
       // Supprime un post ou un commentaire si c'est le notre
+       const ConfirmDelete = confirm("Vous voulez supprimer ?  ");
+       if (ConfirmDelete == true) {
       this.$axios
         .delete("post/" + postID)
         .then(() => {
           if (postID === this.$route.params.id) {
-            this.$router.push({ name: "Feed"});
+            this.$router.push({ name: "Feed" });
           }
           const indexPost = this.$data.posts
             .map((e) => {
@@ -273,6 +311,10 @@ export default {
           this.alertActive("alert-warning", "Commentaire supprimé !");
         })
         .catch((e) => console.log(e));
+        }else{
+          ConfirmDelete == false ; 
+        }
+
     },
     sendReaction(postID, reaction) {
       // Envois les réactions
@@ -324,7 +366,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped lang="scss">
 .avatar {

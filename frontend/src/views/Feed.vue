@@ -63,9 +63,10 @@
         <template
           v-slot:postGif
           v-if="
-            post.gifUrl.includes('.gif') ||
-              post.gifUrl.includes('.jpg') ||
-              post.gifUrl.includes('.jpeg')
+            post.gitUrl !== null &&
+              (post.gifUrl.includes('.gif') ||
+                post.gifUrl.includes('.jpg') ||
+                post.gifUrl.includes('.jpeg'))
           "
         >
           <img
@@ -77,7 +78,10 @@
         <!-- Fin -->
 
         <!-- Afficher les vidéos (mp4) dans les posts -->
-        <template v-slot:postGif v-else-if="post.gifUrl.includes('.mp4')">
+        <template
+          v-slot:postGif
+          v-else-if="post.gitUrl !== null && post.gifUrl.includes('.mp4')"
+        >
           <video width="100%" controls>
             <source :src="post.gifUrl" type="video/mp4" />
             Your browser does not support HTML video.
@@ -215,8 +219,8 @@ export default {
       this.$axios
         .get("post")
         .then((data) => {
-          console.log('pass recupere les posts');
           this.posts = data.data;
+          console.log(this.posts);
         })
         .catch((e) => {
           if (e.response.status === 401) {
@@ -240,6 +244,9 @@ export default {
     },
     deletePost(postID) {
       // Supprime un post si c'est le notre
+      const ConfirmDelete = confirm("Vous voulez supprimer le Post ?  ");
+      if (ConfirmDelete == true) {
+        alert("POST supprimé ");
       this.$axios
         .delete("post/" + postID)
         .then(() => {
@@ -252,6 +259,9 @@ export default {
           this.alertActive("alert-warning", "Post supprimé !");
         })
         .catch((e) => console.log(e));
+      } else {
+        ConfirmDelete == false;
+      }
     },
     sendReaction(postID, reaction) {
       // Envois les réactions

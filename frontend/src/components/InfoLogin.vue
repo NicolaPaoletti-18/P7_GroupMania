@@ -49,6 +49,9 @@
         <p class="text-muted" id="passwordInfo">
           <slot name="messagePassword"></slot>
         </p>
+        <p class="alert-success">
+          <slot name="messageSucces"></slot>
+        </p>
         <p class="text-danger">
           <slot name="messageError"></slot>
         </p>

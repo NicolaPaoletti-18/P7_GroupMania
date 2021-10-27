@@ -7,7 +7,12 @@
     <!-- Fin -->
     <!-- Form pour login -->
     <form onsubmit="return false">
-      <InfoLogin validateText="Se connecter" v-on:data-sent="updateData" v-on:request-sent="login">
+      <InfoLogin
+        validateText="Se connecter"
+        v-on:data-sent="updateData"
+        v-on:request-sent="login"
+      >
+        <template v-slot:messageSucces> {{ messageSucces }} </template>
         <template v-slot:messageError>{{ message }}</template>
       </InfoLogin>
     </form>
@@ -29,6 +34,7 @@ export default {
       email: "",
       password: "",
       message: null, // Message d'erreur
+      messageSucces: null, // Message succes
     };
   },
   methods: {
@@ -45,8 +51,8 @@ export default {
           sessionStorage.setItem("token", data.data.token);
           this.$axios.defaults.headers.common["Authorization"] =
             "Bearer " + data.data.token;
+          this.messageSucces = "Accès autorisé";
           this.$router.push("Feed");
-          window.alert("ACCÈS AUTORISÉ");
         })
         .catch((e) => {
           if (e.response.status === 401) {

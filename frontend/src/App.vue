@@ -15,6 +15,9 @@
   color: #000000;
   background-color: #fafbff;
   min-height: 100%;
+  .container-fluid{
+    max-width: 1000px;
+  }
   a {
     color: #2c3e50;
   }

@@ -45,7 +45,7 @@ export default {
   data: () => {
     return {
       legend: "", // Corps du post
-      image: "", // Gif du post
+      image: null && "", // Gif du post
     };
   },
   methods: {

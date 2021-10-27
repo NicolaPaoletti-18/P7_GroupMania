@@ -1,6 +1,5 @@
 <template>
   <article class="mb-3" :id="idPost">
-    <slot name="postDelete"></slot>
     <div class="row no-gutters post align-items-center border-bottom pb-1">
       <div class="col-md-8">
         <div class="container mt-1">
@@ -22,7 +21,8 @@
             <p class="col-12 h5-lg">
               <slot name="postLegend"></slot>
             </p>
-          </div>
+          </div> 
+          <slot name="postDelete"></slot>
           <!-- Fin -->
         </div>
       </div>

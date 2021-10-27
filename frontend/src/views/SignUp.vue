@@ -17,6 +17,7 @@
           >Doit contenir: 1 majuscule, 1 minuscule et 1 chiffre (8 caractères
           minimum)</template
         >
+        <template v-slot:messageSucces> {{ messageSucces }} </template>
         <template v-slot:messageError>{{ message }}</template>
       </InfoLogin>
     </form>
@@ -42,6 +43,7 @@ export default {
       firstName: "",
       lastName: "",
       message: null, // Message d'erreur
+      messageSucces: null, // Message Success
     };
   },
   methods: {
@@ -64,10 +66,10 @@ export default {
             sessionStorage.setItem("token", data.data.token);
             this.$axios.defaults.headers.common["Authorization"] =
               "Bearer " + data.data.token;
+            this.messageSucces = "COMPTE CRÉÉ";
             this.$router.push("Feed");
-            window.alert("COMPTE CRÉÉ");
-          }) 
-        }) 
+          });
+        })
         .catch((e) => {
           if (e.response.status === 500) {
             this.message = "Erreur serveur";
