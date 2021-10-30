@@ -7,7 +7,7 @@ CREATE DATABASE Groupmania_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 GRANT ALL
 ON Groupmania_db.*
-TO 'nicolap7';
+TO 'root';
 
 USE Groupmania_db;
 
@@ -17,7 +17,7 @@ CREATE TABLE User (
 	firstName VARCHAR(30) NOT NULL,
 	lastName VARCHAR(30) NOT NULL,
 	pseudo VARCHAR(30),
-	password VARCHAR(100) NOT NULL UNIQUE,
+	password VARCHAR(100) NOT NULL ,
 	bio VARCHAR(256),
 	avatarUrl VARCHAR(150) NOT NULL DEFAULT 'http://localhost:3000/images/avatarDefault.jpg',
 	dateCreation DATETIME NOT NULL,

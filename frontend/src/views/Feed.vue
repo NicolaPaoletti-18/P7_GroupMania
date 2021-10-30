@@ -231,7 +231,9 @@ export default {
     post(data) {
       // Poste un post
       const formData = new FormData();
-      formData.append("image", data.image);
+      if(data.image !==null){
+        formData.append("image", data.image)
+      }
       formData.append("legend", data.legend);
       this.$axios
         .post("post", formData)
@@ -315,8 +317,8 @@ export default {
 
 <style scoped lang="scss">
 .avatar {
-  width: 2em;
-  height: 2em;
+  width: 4em;
+  height: 4em;
   object-fit: cover;
 }
 i {

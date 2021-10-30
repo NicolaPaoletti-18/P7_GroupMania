@@ -9,6 +9,7 @@ const path = require('path');
 
 const helmet = require("helmet");
 const expressSanitizer = require('express-sanitizer');
+
 // FIN MODULES
 
 // IMPORTATION ROUTES
@@ -33,20 +34,7 @@ app.use(helmet()); // Protège l'app en paramétrant des Headers (notamment cont
 
 app.use(cors());
 
-// connection MySQL DATABASE 
-/*const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'IlmioaccountMySQL!!97',
-  database: 'groupmania_db',
-});
-mysql.connect((err) => {
-  if(err) {
-    throw err;
-  }else{
-   
-  console.log("MySQL Connected ...")};
-})*/
+
 // FIN CONNECTION MySQL
 
 // BODYPARSER

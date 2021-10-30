@@ -32,7 +32,7 @@
       <button
         class="btn btn-light form-control text-center"
         type="submit"
-        v-on:click.prevent="sendPost()"
+        v-on:click.prevent="sendPost()" 
       >Publier</button>
       <!-- Fin -->
     </form>
@@ -53,16 +53,20 @@ export default {
       const formValid = document
         .getElementsByName("createPost")[0]
         .checkValidity();
+       
       if (formValid) {
         this.$emit("post-sent", this.$data);
         document
+        .getElementsByName("image")[0].value != null;
+        
+        document 
         .getElementsByName("legend")[0].value = null;
-        document
-        .getElementsByName("image")[0].value = null;
       }
     },
     sendFile(event) { // Envois du Gif au parent pour traiter l'envois à l'API
-      this.$data.image = event.target.files[0];
+    if(event.target.files[0] !== null){
+      this.$data.image = event.target.files[0]
+      }
     },
   },
 };

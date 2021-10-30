@@ -282,7 +282,7 @@ export default {
         .get(`post/${this.$route.params.id}`)
         .then((data) => {
           this.posts = data.data;
-        })
+        }) 
         .catch((e) => {
           if (e.response.status === 401) {
             this.alertConstant("alert-danger mt-5", "Veuillez vous connecter");
@@ -294,27 +294,26 @@ export default {
     },
     deletePost(postID) {
       // Supprime un post ou un commentaire si c'est le notre
-       const ConfirmDelete = confirm("Vous voulez supprimer ?  ");
-       if (ConfirmDelete == true) {
-      this.$axios
-        .delete("post/" + postID)
-        .then(() => {
-          if (postID === this.$route.params.id) {
-            this.$router.push({ name: "Feed" });
-          }
-          const indexPost = this.$data.posts
-            .map((e) => {
-              return e.postID;
-            })
-            .indexOf(parseInt(postID));
-          this.$data.posts.splice(indexPost, 1);
-          this.alertActive("alert-warning", "Commentaire supprimé !");
-        })
-        .catch((e) => console.log(e));
-        }else{
-          ConfirmDelete == false ; 
-        }
-
+      const ConfirmDelete = confirm("Vous voulez supprimer ?  ");
+      if (ConfirmDelete == true) {
+        this.$axios
+          .delete("post/" + postID)
+          .then(() => {
+            if (postID === this.$route.params.id) {
+              this.$router.push({ name: "Feed" });
+            }
+            const indexPost = this.$data.posts
+              .map((e) => {
+                return e.postID;
+              })
+              .indexOf(parseInt(postID));
+            this.$data.posts.splice(indexPost, 1);
+            this.alertActive("alert-warning", "Commentaire supprimé !");
+          })
+          .catch((e) => console.log(e));
+      } else {
+        ConfirmDelete == false;
+      }
     },
     sendReaction(postID, reaction) {
       // Envois les réactions
@@ -360,8 +359,9 @@ export default {
   },
   mounted() {
     // Récupère le post et ses commentaires et défini le titre
-    this.getUserRole();
+    this.getUserRole();console.log('pass');
     this.get();
+    
     document.title = "Post | Groupomania";
   },
 };
@@ -369,8 +369,8 @@ export default {
 
 <style scoped lang="scss">
 .avatar {
-  width: 2em;
-  height: 2em;
+  width: 4em;
+  height: 4em;
   object-fit: cover;
 }
 i {
